@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 import sys
 
-cap = cv2.VideoCapture("input5.mp4")
+cap = cv2.VideoCapture("input3.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 detector = YOLO("models/yolov5s.pt",0.5, 0.3)
@@ -30,7 +30,7 @@ while(cap.isOpened()):
                     x_center = (xyxy[0] + xyxy[2])/2 
                     y_center = xyxy[3]
                     
-                    if obj['label']=='sports ball':
+                    if obj['label']=='ball':
                         plot_one_box(xyxy,frame,(102,0,102),label='ball')
         else:
            deep_sort.deepsort.increment_ages()
