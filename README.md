@@ -2,8 +2,8 @@
 ## ML workflow
 > **Standards followed for creating End-to-End Machine Learning Workflow:** https://ml-ops.org/content/end-to-end-ml-workflow
 <br>
+![Model FYP (1)](https://user-images.githubusercontent.com/68152189/157322122-2d0dba84-812a-418c-8d3d-f912f44c412d.png)
 
-<img align="center" src="https://user-images.githubusercontent.com/68152189/153837227-2a50577e-9aee-41bd-9dab-9d245b4eb330.png" width="500" />
 
 <br>
 
