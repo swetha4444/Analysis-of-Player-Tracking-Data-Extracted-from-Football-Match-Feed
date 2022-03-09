@@ -37,8 +37,7 @@ def compute_homography(batch_corners_pred):
     )
     return to_numpy(homography)
 
-def getHomogrpahyMatrix(templatePath,frame):
-    image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+def getHomogrpahyMatrix(templatePath,image):
     direct_homography_model = DeepHomoModel()
     WEIGHTS_PATH = (
     "https://storage.googleapis.com/narya-bucket-1/models/deep_homo_model.h5"
@@ -52,7 +51,7 @@ def getHomogrpahyMatrix(templatePath,frame):
 
     direct_homography_model.load_weights(checkpoints)
     corners = direct_homography_model(image)
-    template = cv2.imread('world_cup_template.png')
+    template = cv2.imread(templatePath)
     template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
     template = cv2.resize(template, (1280,720))/255.
     pred_homo = compute_homography(corners)[0]

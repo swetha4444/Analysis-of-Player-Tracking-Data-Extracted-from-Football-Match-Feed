@@ -2,6 +2,7 @@ from modules.yolo import YOLO
 from modules.yolo import *
 from modules.deepsort import *
 from yolov5.utils.plots import plot_one_box
+from modules.perspectiveTransform import *
 
 import torch
 import os
@@ -20,7 +21,9 @@ while(cap.isOpened()):
     ret,frame = cap.read()
     if ret:
         main_frame = frame.copy()
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         yoloOutput = detector.detect(frame)
+        print(getHomogrpahyMatrix('black.jpg',image))
         
         if yoloOutput:
                 deep_sort.detection_to_deepsort(yoloOutput, frame)
