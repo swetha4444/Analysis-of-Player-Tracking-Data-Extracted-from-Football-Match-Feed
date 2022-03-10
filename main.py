@@ -3,12 +3,9 @@ from modules.yolo import *
 from modules.deepsort import *
 from yolov5.utils.plots import plot_one_box
 from modules.perspectiveTransform import *
-
-import torch
-import os
 import cv2
 import numpy as np
-import sys
+
 
 cap = cv2.VideoCapture("input3.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)

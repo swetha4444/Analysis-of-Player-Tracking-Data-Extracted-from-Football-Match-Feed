@@ -1,9 +1,8 @@
 import numpy as np
 import cv2
-from narya.narya.models.keras_models import DeepHomoModel
+from narya.models.keras_models import DeepHomoModel
 import tensorflow as tf
-from narya.narya.models.keras_models import KeypointDetectorModel
-from narya.narya.utils.homography import *
+from narya.utils.homography import *
 import kornia as K
 
 def get_perspective_transform_torch(src, dst):
@@ -37,22 +36,23 @@ def compute_homography(batch_corners_pred):
     )
     return to_numpy(homography)
 
+
+direct_homography_model = DeepHomoModel()
+WEIGHTS_PATH = (
+"https://storage.googleapis.com/narya-bucket-1/models/deep_homo_model.h5"
+)
+WEIGHTS_NAME = "deep_homo_model.h5"
+WEIGHTS_TOTAR = False
+checkpoints = tf.keras.utils.get_file(
+                WEIGHTS_NAME, WEIGHTS_PATH, WEIGHTS_TOTAR,
+            )
+direct_homography_model.load_weights(checkpoints)
+
 def getHomogrpahyMatrix(templatePath,image):
-    direct_homography_model = DeepHomoModel()
-    WEIGHTS_PATH = (
-    "https://storage.googleapis.com/narya-bucket-1/models/deep_homo_model.h5"
-    )
-    WEIGHTS_NAME = "deep_homo_model.h5"
-    WEIGHTS_TOTAR = False
-
-    checkpoints = tf.keras.utils.get_file(
-                    WEIGHTS_NAME, WEIGHTS_PATH, WEIGHTS_TOTAR,
-                )
-
-    direct_homography_model.load_weights(checkpoints)
     corners = direct_homography_model(image)
     template = cv2.imread(templatePath)
     template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
     template = cv2.resize(template, (1280,720))/255.
     pred_homo = compute_homography(corners)[0]
-    print("Predicted homography: {}".format(pred_homo))
+    print("Predicted homography: {}".format(pred_homo))  
+    return pred_homo
