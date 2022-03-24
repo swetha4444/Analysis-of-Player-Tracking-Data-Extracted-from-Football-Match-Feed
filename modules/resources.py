@@ -1,6 +1,7 @@
 import cv2
 from sklearn.cluster import KMeans
 import numpy as np
+from modules.jerseycolor import *
 
 
 pallete = {'b': (0, 0, 128),
@@ -35,6 +36,12 @@ def draw_boxes(img, bbox, identities=None, offset=(0, 0)):
         color = compute_color_for_labels(id)
         label = '{}{:d}'.format("", id)
         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2, 2)[0]
+        
+        color = getClusters(img[y1:y2, x1:x2])
+        #color = closest_color(list_of_colors, cluster)[0]
+        #color = (int(color[0]), int(color[1]), int(color[2]))
+        print("Color: ",color)
+        
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 3)
         cv2.rectangle(
             img, (x1, y1), (x1 + t_size[0] + 3, y1 + t_size[1] + 4), color, -1)

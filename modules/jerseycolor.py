@@ -27,8 +27,7 @@ def closest_color(list_of_colors, color):
     return shortest_distance
 
 def getClusters(img):
-    image = cv2.imread(img)
-    image = cv2.resize(image,(200,200))
+    image = cv2.resize(img,(200,200))
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     r = []
     g = []
@@ -51,9 +50,3 @@ def getClusters(img):
             pass
         else:
             return cluster
-
-cluster=getClusters('../image5.JPG')
-print(cluster)
-assigned_color = closest_color(list_of_colors, cluster)[0]
-assigned_color = (int(assigned_color[0]), int(assigned_color[1]), int(assigned_color[2]))
-print(assigned_color)

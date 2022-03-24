@@ -43,6 +43,10 @@ while(cap.isOpened()):
                         xyxy = [obj['bbox'][0][0], obj['bbox'][0][1], obj['bbox'][1][0], obj['bbox'][1][1]]
                         x_center = (xyxy[0] + xyxy[2])/2 
                         y_center = xyxy[3]
+                        try:
+                            color = detect_color(main_frame[xyxy[1]:xyxy[3], xyxy[0]:xyxy[2]])
+                        except:
+                          pass
                         coords = transform_matrix(M, (x_center, y_center), (h, w), (gt_h, gt_w))
                         cv2.circle(bg_img, coords, 5, (255,0,0), -1)
                         #cv2.putText(bg_img, str(i), coords, cv2.FONT_HERSHEY_PLAIN, 2, [255, 255, 255], 1)
