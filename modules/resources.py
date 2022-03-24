@@ -38,9 +38,9 @@ def draw_boxes(img, bbox, identities=None, offset=(0, 0)):
         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2, 2)[0]
         
         try:
-            cluster = getClusters(img[y1:y2, x1:x2])
-            color = closest_color(list_of_colors, cluster)[0]
-            color = (int(color[0]), int(color[1]), int(color[2]))
+            color = getClusters(img[y1:y2, x1:x2])
+            #color = closest_color(list_of_colors, cluster)[0]
+            #color = (int(color[0]), int(color[1]), int(color[2]))
         except:
             pass
         
