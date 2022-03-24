@@ -9,7 +9,7 @@ from modules.resources import *
 
 
 frame_num = 0
-cap = cv2.VideoCapture("input3.mp4")
+cap = cv2.VideoCapture("input6.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 print("Frame vid size: ",w,h)
