@@ -8,3 +8,4 @@
 *.mp4
 .ipynb_checkpoints/
 ./models/
+./modules/__pycache__/

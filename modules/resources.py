@@ -41,3 +41,11 @@ def draw_boxes(img, bbox, identities=None, offset=(0, 0)):
         cv2.putText(img, label, (x1, y1 +
                                  t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 2, [255, 255, 255], 2)
     return img
+
+def transform_matrix(matrix, p, vid_shape, gt_shape):
+    print("Before: ",p)
+    p = (p[0]/vid_shape[1], p[1]/vid_shape[0])
+    px = (matrix[0][0]*p[0] + matrix[0][1]*p[1] + matrix[0][2]) / ((matrix[2][0]*p[0] + matrix[2][1]*p[1] + matrix[2][2]))
+    py = (matrix[1][0]*p[0] + matrix[1][1]*p[1] + matrix[1][2]) / ((matrix[2][0]*p[0] + matrix[2][1]*p[1] + matrix[2][2]))
+    print("After: ",(int(px*gt_shape[1]) , int(py*gt_shape[0])))
+    return (int(px*gt_shape[1]) , int(py*gt_shape[0]))
