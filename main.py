@@ -13,7 +13,6 @@ frame_num = 0
 cap = cv2.VideoCapture("input3.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-print("Frame vid size: ",w,h)
 detector = YOLO("models/yolov5s.pt",0.5, 0.3)
 deep_sort = DEEPSORT("deep_sort_pytorch/configs/deep_sort.yaml")
 
@@ -34,7 +33,6 @@ while(cap.isOpened()):
         if frame_num % 5 ==0:
             M,gt_h, gt_w = getHomogrpahyMatrix('world_cup_template.png',frame)
             #M = np.linalg.inv(M)
-            print(gt_h,gt_w)
         
         if yoloOutput:
                 deep_sort.detection_to_deepsort(yoloOutput, frame)
