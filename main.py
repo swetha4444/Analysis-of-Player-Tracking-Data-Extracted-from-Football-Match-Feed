@@ -6,10 +6,11 @@ from modules.perspectiveTransform import *
 import cv2
 import numpy as np
 from modules.resources import *
+from modules.jerseycolor import *
 
 
 frame_num = 0
-cap = cv2.VideoCapture("input6.mp4")
+cap = cv2.VideoCapture("input3.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 print("Frame vid size: ",w,h)
@@ -39,10 +40,10 @@ while(cap.isOpened()):
                 deep_sort.detection_to_deepsort(yoloOutput, frame)
 
                 for i, obj in enumerate(yoloOutput):
+                    xyxy = [obj['bbox'][0][0], obj['bbox'][0][1], obj['bbox'][1][0], obj['bbox'][1][1]]
+                    x_center = (xyxy[0] + xyxy[2])/2 
+                    y_center = xyxy[3]
                     if obj['label'] == 'player':
-                        xyxy = [obj['bbox'][0][0], obj['bbox'][0][1], obj['bbox'][1][0], obj['bbox'][1][1]]
-                        x_center = (xyxy[0] + xyxy[2])/2 
-                        y_center = xyxy[3]
                         try:
                             color = detect_color(main_frame[xyxy[1]:xyxy[3], xyxy[0]:xyxy[2]])
                         except:
@@ -60,6 +61,7 @@ while(cap.isOpened()):
     
         #frame[frame.shape[0]-bg_img.shape[0]:, frame.shape[1]-bg_img.shape[1]:] = bg_img
         #cv2.resize(bg_img, (1024,1024))
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.imshow('frame',frame)
         if cv2.waitKey(1) & ord('q') == 0xFF:
             break
