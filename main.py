@@ -20,6 +20,13 @@ gt_img = cv2.imread('world_cup_template.png')
 gt_img= cv2.cvtColor(gt_img, cv2.COLOR_BGR2RGB)
 gt_img = cv2.resize(gt_img, (1280,720))/255.
 
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+size = (frame_width, frame_height)
+result = cv2.VideoWriter('output.mp4', 
+                         cv2.VideoWriter_fourcc(*'mp4v'),
+                         20, size)
+
 while(cap.isOpened()):
     bbox = []
     ret,frame = cap.read()
@@ -61,11 +68,14 @@ while(cap.isOpened()):
         #cv2.resize(bg_img, (1024,1024))
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.imshow('frame',frame)
-        if cv2.waitKey(1) & ord('q') == 0xFF:
+        frame = cv2.resize(frame, size)
+        result.write(frame)
+        
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
             break
     else:
         break
     
-   
 cap.release()
 cv2.destroyAllWindows()
