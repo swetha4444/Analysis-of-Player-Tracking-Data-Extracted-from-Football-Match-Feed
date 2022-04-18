@@ -4,6 +4,9 @@ from narya.models.keras_models import DeepHomoModel
 import tensorflow as tf
 from narya.utils.homography import *
 import kornia as K
+from matplotlib import pyplot as plt
+from narya.utils.vizualization import visualize
+from narya.utils.vizualization import merge_template
 
 def get_perspective_transform_torch(src, dst):
     """Get the homography matrix between src and dst
@@ -51,9 +54,20 @@ direct_homography_model.load_weights(checkpoints)
 def getHomogrpahyMatrix(templatePath,image):
     corners = direct_homography_model(image)
     template = cv2.imread(templatePath)
+    template = cv2.resize(template,(320, 320))
     template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
-    template = cv2.resize(template, (1280,720))/255.
     gt_h, gt_w, _ = template.shape
     pred_homo = compute_homography(corners)[0]
     print("Predicted homography: {}".format(pred_homo))  
     return pred_homo,gt_h, gt_w
+
+def visualise_homography(image,templatePath,pred_homo):
+    template = cv2.imread(templatePath)
+    pred_warp = warp_image(np_img_to_torch_img(template),to_torch(pred_homo),method='torch')
+    pred_warp = torch_img_to_np_img(pred_warp[0])
+    image = cv2.resize(image,(320, 320))
+    test = merge_template(image/255.,cv2.resize(pred_warp,(320, 320)))
+    plt.imshow(test)
+    plt.savefig('img.png')
+    plt.show()
+    

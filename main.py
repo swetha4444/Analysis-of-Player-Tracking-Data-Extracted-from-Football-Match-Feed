@@ -16,9 +16,8 @@ h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 detector = YOLO("models/yolov5s.pt",0.5, 0.3)
 deep_sort = DEEPSORT("deep_sort_pytorch/configs/deep_sort.yaml")
 
-gt_img = cv2.imread('world_cup_template.png')
+gt_img = cv2.imread('black.jpg')
 gt_img= cv2.cvtColor(gt_img, cv2.COLOR_BGR2RGB)
-gt_img = cv2.resize(gt_img, (1280,720))/255.
 
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
@@ -31,15 +30,19 @@ while(cap.isOpened()):
     bbox = []
     ret,frame = cap.read()
     bg_img = gt_img.copy()
+    frame = cv2.resize(frame,(320, 320))
+    bg_img = cv2.resize(bg_img,(320, 320))
     
     if ret:
-        main_frame = frame.copy()
+        main_frame = frame.copy() 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         yoloOutput = detector.detect(frame)
         
         if frame_num % 5 ==0:
-            M,gt_h, gt_w = getHomogrpahyMatrix('world_cup_template.png',frame)
+            M,gt_h, gt_w = getHomogrpahyMatrix('black.jpg',frame)
             #M = np.linalg.inv(M)
+            visualise_homography(frame,'black.jpg',M)
+            
         
         if yoloOutput:
                 deep_sort.detection_to_deepsort(yoloOutput, frame)
@@ -67,9 +70,9 @@ while(cap.isOpened()):
         #frame[frame.shape[0]-bg_img.shape[0]:, frame.shape[1]-bg_img.shape[1]:] = bg_img
         #cv2.resize(bg_img, (1024,1024))
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        cv2.imshow('frame',frame)
-        frame = cv2.resize(frame, size)
-        result.write(frame)
+        cv2.imshow('frame',bg_img)
+        #frame = cv2.resize(frame, size)
+        #result.write(frame)
         
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
