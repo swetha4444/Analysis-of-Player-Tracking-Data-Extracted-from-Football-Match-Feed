@@ -2,7 +2,7 @@
 ## ML workflow
 > **Standards followed for creating End-to-End Machine Learning Workflow:** https://ml-ops.org/content/end-to-end-ml-workflow
 <br>
-<img src="https://user-images.githubusercontent.com/68152189/158459465-595fabd0-9139-4eaa-b0e6-05b81fe45463.png" width=500/>
+<img src="https://user-images.githubusercontent.com/68152189/163807378-e552e98c-b5e3-472a-965d-3a8fe5cb2255.png" width=500/>
 <br>
 
 ## Modules
