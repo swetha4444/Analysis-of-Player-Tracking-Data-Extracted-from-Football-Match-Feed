@@ -2,6 +2,7 @@ import pyflann
 import scipy.io as sio
 import numpy as np
 import cv2
+import argparse
 
 from sports_callibration.util.synthetic_util import SyntheticUtil
 from sports_callibration.util.iou_util import IouUtil
@@ -16,9 +17,9 @@ import torch.backends.cudnn as cudnn
 
 from sports_callibration.deep.siamese import BranchNetwork, SiameseNetwork
 from sports_callibration.deep.camera_dataset import CameraDataset
+from sports_callibration.arguments import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class Perspective_Transform():
     def __init__(self):
@@ -196,10 +197,8 @@ class Perspective_Transform():
                                 transforms.RandomCrop(cropsize),transforms.ToTensor(),
                                 transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])(image)
         image=image.unsqueeze(0)        
-            
         self.model.set_input(image)        
-        self.model.test()
-                    
+        self.model.test()         
         visuals = self.model.get_current_visuals()
         
         edge_map=visuals['fake_D'] 
@@ -210,13 +209,12 @@ class Perspective_Transform():
 
         return edge_map , seg_map 
 
-    # def initialize_two_GAN(self, directory):
-    #     opt = Arguments().parse()
-    #     opt.nThreads = 1   # test code only supports nThreads = 1
-    #     opt.batchSize = 1  # test code only supports batchSize = 1
-    #     opt.serial_batches = True  # no shuffle
-    #     opt.no_flip = True  # no flip
-    #     opt.continue_train = False
-
-    #     self.model = create_model(opt)
-    #     return self.model
+    def initialize_two_GAN(self, directory):
+        opt = Arguments().parse()
+        opt.nThreads = 1   # test code only supports nThreads = 1
+        opt.batchSize = 1  # test code only supports batchSize = 1
+        opt.serial_batches = True  # no shuffle
+        opt.no_flip = True  # no flip
+        opt.continue_train = False
+        self.model = create_model(opt)
+        return self.model

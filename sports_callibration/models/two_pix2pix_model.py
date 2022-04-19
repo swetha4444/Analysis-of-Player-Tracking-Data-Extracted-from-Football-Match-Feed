@@ -3,8 +3,8 @@ import os
 import torch
 from collections import OrderedDict
 from torch.autograd import Variable
-import perspective_transform.util.util as util
-from perspective_transform.util.image_pool import ImagePool
+import sports_callibration.util.util as util
+from sports_callibration.util.image_pool import ImagePool
 from .pix2pix_model import Pix2PixModel
 from . import networks
 
