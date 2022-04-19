@@ -1,4 +1,4 @@
-# Extracting Player Tracking Data from Football Match Feed for Analysis
+# Analysis of Player Tracking Data Extracted from Football Match Feed
 ## ML workflow
 > **Standards followed for creating End-to-End Machine Learning Workflow:** https://ml-ops.org/content/end-to-end-ml-workflow
 <br>
