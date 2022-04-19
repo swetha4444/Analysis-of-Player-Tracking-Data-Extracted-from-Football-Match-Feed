@@ -12,19 +12,19 @@ import matplotlib.pyplot as plt
 
 
 frame_num = 0
-cap = cv2.VideoCapture("input3.mp4")
+cap = cv2.VideoCapture("./static/input3.mp4")
 w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 detector = YOLO("models/yolov5s.pt",0.5, 0.3)
 deep_sort = DEEPSORT("deep_sort_pytorch/configs/deep_sort.yaml")
 
-gt_img = cv2.imread('black.jpg')
+gt_img = cv2.imread('./static/black.jpg')
 gt_h, gt_w, _ = gt_img.shape
 
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 size = (frame_width, frame_height)
-result = cv2.VideoWriter('output.mp4', 
+result = cv2.VideoWriter('./static/output.mp4', 
                          cv2.VideoWriter_fourcc(*'mp4v'),
                          20, size)
 
@@ -39,9 +39,9 @@ while(cap.isOpened()):
         yoloOutput = detector.detect(frame)
         
         if frame_num % 5 ==0:
-            M,gt_h, gt_w = getHomogrpahyMatrix('world_cup_template.png',frame)
+            M,gt_h, gt_w = getHomogrpahyMatrix('./static/world_cup_template.png',frame)
             #M = np.linalg.inv(M)
-            visualise_homography(frame,'world_cup_template.png',M)
+            visualise_homography(frame,'./static/world_cup_template.png',M)
         
         
         if yoloOutput:
@@ -58,10 +58,8 @@ while(cap.isOpened()):
                         except:
                           pass
                         coords = transform_matrix(M, (x_center, y_center), (h, w), (gt_h, gt_w))
-                        x.append(coords[0])
-                        y.append(coords[1])
                         cv2.circle(bg_img, coords, 5, (255,0,0), -1)
-                        #cv2.putText(bg_img, str(i), coords, cv2.FONT_HERSHEY_PLAIN, 2, [255, 255, 255], 1)
+                        cv2.putText(bg_img, str(i), coords, cv2.FONT_HERSHEY_PLAIN, 2, [255, 255, 255], 1)
                     
                     elif obj['label']=='ball':
                         coords = transform_matrix(M, (x_center, y_center), (h, w), (gt_h, gt_w))
@@ -70,8 +68,7 @@ while(cap.isOpened()):
         else:
            deep_sort.deepsort.increment_ages()
     
-        #frame[frame.shape[0]-bg_img.shape[0]:, frame.shape[1]-bg_img.shape[1]:] = bg_img
-        #cv2.resize(bg_img, (1024,1024))
+        frame[frame.shape[0]-bg_img.shape[0]:, frame.shape[1]-bg_img.shape[1]:] = bg_img
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.imshow('frame',bg_img)
         frame = cv2.resize(frame, size)
