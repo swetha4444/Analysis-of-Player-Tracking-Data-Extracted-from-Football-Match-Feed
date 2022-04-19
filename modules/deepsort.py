@@ -22,9 +22,11 @@ class DEEPSORT():
 
         # Adapt detections to deep sort input format
         for obj in objects:
+            label = obj['label']
             if obj['label'] == 'player':
                 xyxy = [obj['bbox'][0][0], obj['bbox'][0][1], obj['bbox'][1][0], obj['bbox'][1][1]]
                 conf = obj['score']
+            
                 # to deep sort format
                 x_c, y_c, bbox_w, bbox_h = self.xyxy_to_xywh(*xyxy)
                 xywh_obj = [x_c, y_c, bbox_w, bbox_h]
@@ -42,6 +44,7 @@ class DEEPSORT():
             bbox_xyxy = outputs[:, :4]
             identities = outputs[:, -1]
             draw_boxes(im0, bbox_xyxy, identities)
+        return outputs
     
 
     def xyxy_to_xywh(self, *xyxy):

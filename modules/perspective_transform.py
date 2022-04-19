@@ -91,7 +91,7 @@ class Perspective_Transform():
         refined_h = h_retrieved_to_query@retrieved_h
         Warp_img = cv2.warpPerspective(seg_map, np.linalg.inv(refined_h), (115,74), borderMode=cv2.BORDER_CONSTANT)
 
-        print("Predicted homography: {}".format(np.linalg.inv(refined_h))) 
+        #print("Predicted homography: {}".format(np.linalg.inv(refined_h))) 
         return np.linalg.inv(refined_h), Warp_img
 
 
