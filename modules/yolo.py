@@ -56,6 +56,4 @@ class YOLO():
                         'score': score,
                         'cls' : int(p[5])}
                 items.append(item)
-
         return(items)
-

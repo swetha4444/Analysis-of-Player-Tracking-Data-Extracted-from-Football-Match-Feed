@@ -9,7 +9,6 @@ from modules.resources import *
 from modules.jerseycolor import *
 import matplotlib.pyplot as plt
 
-from mplsoccer import Pitch, VerticalPitch
 
 
 frame_num = 0
@@ -29,14 +28,7 @@ result = cv2.VideoWriter('output.mp4',
                          cv2.VideoWriter_fourcc(*'mp4v'),
                          20, size)
 
-while(cap.isOpened()):
-    pitch = Pitch(pitch_type='tracab',  # example plotting a tracab pitch
-                    pitch_length=280, pitch_width=280,
-                    axis=True, label=True)  # showing axis labels is optional
-    fig, ax = pitch.draw()
-    x = []
-    y = []
-    
+while(cap.isOpened()):    
     bbox = []
     ret,frame = cap.read()
     bg_img = gt_img.copy()
@@ -47,9 +39,9 @@ while(cap.isOpened()):
         yoloOutput = detector.detect(frame)
         
         if frame_num % 5 ==0:
-            M,gt_h, gt_w = getHomogrpahyMatrix('black.jpg',frame)
+            M,gt_h, gt_w = getHomogrpahyMatrix('world_cup_template.png',frame)
             #M = np.linalg.inv(M)
-            visualise_homography(frame,'black.jpg',M)
+            visualise_homography(frame,'world_cup_template.png',M)
         
         
         if yoloOutput:
@@ -59,7 +51,7 @@ while(cap.isOpened()):
                 for i, obj in enumerate(yoloOutput):
                     xyxy = [obj['bbox'][0][0], obj['bbox'][0][1], obj['bbox'][1][0], obj['bbox'][1][1]]
                     x_center = (xyxy[0] + xyxy[2])/2 
-                    y_center = xyxy[3]
+                    y_center = xyxy[1]
                     if obj['label'] == 'player':
                         try:
                             color = detect_color(main_frame[xyxy[1]:xyxy[3], xyxy[0]:xyxy[2]])
@@ -82,14 +74,9 @@ while(cap.isOpened()):
         #cv2.resize(bg_img, (1024,1024))
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.imshow('frame',bg_img)
-        #frame = cv2.resize(frame, size)
-        #result.write(frame)
-        df_shots = pd.DataFrame(list(zip(x,y)),columns=['x','y'])
-        sc = pitch.scatter(df_shots.x, df_shots.y,ax=ax)
-        fig.savefig("pitch_viz.png")
-        print(df_shots)
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
+        frame = cv2.resize(frame, size)
+        result.write(frame)
+        if (cv2.waitKey(1) & 0xFF) == ord("q"):
             break
     else:
         break
