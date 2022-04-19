@@ -1,8 +1,9 @@
 from modules.yolo import YOLO
 from modules.yolo import *
 from modules.deepsort import *
+from modules.perspective_transform import Perspective_Transform
 from yolov5.utils.plots import plot_one_box
-from modules.perspectiveTransform import *
+from modules.narya import *
 import cv2
 import numpy as np
 from modules.resources import *
@@ -17,8 +18,12 @@ w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 detector = YOLO("models/yolov5s.pt",0.5, 0.3)
 deep_sort = DEEPSORT("deep_sort_pytorch/configs/deep_sort.yaml")
+perspective_transform = Perspective_Transform()
 
-gt_img = cv2.imread('./static/black.jpg')
+bg_ratio = int(np.ceil(w/(3*115)))
+gt_img = cv2.imread('./static/world_cup_template.png')
+print((115*bg_ratio, 74*bg_ratio))
+gt_img = cv2.resize(gt_img,(115*bg_ratio, 74*bg_ratio))
 gt_h, gt_w, _ = gt_img.shape
 
 frame_width = int(cap.get(3))
@@ -39,8 +44,8 @@ while(cap.isOpened()):
         yoloOutput = detector.detect(frame)
         
         if frame_num % 5 ==0:
-            M,gt_h, gt_w = getHomogrpahyMatrix('./static/world_cup_template.png',frame)
-            #M = np.linalg.inv(M)
+            #M,gt_h, gt_w = getHomogrpahyMatrix('./static/world_cup_template.png',frame)
+            M, warped_image = perspective_transform.homography_matrix(main_frame)
             visualise_homography(frame,'./static/world_cup_template.png',M)
         
         
@@ -58,7 +63,7 @@ while(cap.isOpened()):
                         except:
                           pass
                         coords = transform_matrix(M, (x_center, y_center), (h, w), (gt_h, gt_w))
-                        cv2.circle(bg_img, coords, 5, (255,0,0), -1)
+                        cv2.circle(bg_img, coords, 5, color, -1)
                         cv2.putText(bg_img, str(i), coords, cv2.FONT_HERSHEY_PLAIN, 2, [255, 255, 255], 1)
                     
                     elif obj['label']=='ball':
@@ -70,7 +75,7 @@ while(cap.isOpened()):
     
         frame[frame.shape[0]-bg_img.shape[0]:, frame.shape[1]-bg_img.shape[1]:] = bg_img
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        cv2.imshow('frame',bg_img)
+        cv2.imshow('frame',frame)
         frame = cv2.resize(frame, size)
         result.write(frame)
         if (cv2.waitKey(1) & 0xFF) == ord("q"):

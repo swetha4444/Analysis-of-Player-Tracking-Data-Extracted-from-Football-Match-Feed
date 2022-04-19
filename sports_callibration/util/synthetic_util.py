@@ -1,8 +1,8 @@
 import numpy as np
 import cv2 as cv
 
-from perspective_transform.util.rotation_util import RotationUtil
-from perspective_transform.util.projective_camera import ProjectiveCamera
+from sports_callibration.util.rotation_util import RotationUtil
+from sports_callibration.util.projective_camera import ProjectiveCamera
 
 class SyntheticUtil:
     @staticmethod
