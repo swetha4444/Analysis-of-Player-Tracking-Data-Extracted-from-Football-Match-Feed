@@ -3,7 +3,7 @@ from modules.yolo import *
 from modules.deepsort import *
 from modules.perspective_transform import Perspective_Transform
 from yolov5.utils.plots import plot_one_box
-from helper import *
+from modules.helper import *
 import cv2
 import numpy as np
 from modules.resources import *
@@ -93,6 +93,9 @@ while(cap.isOpened()):
     
     if (cv2.waitKey(1) & 0xFF) == ord("q"):
             break
+    key = cv2.waitKey(20)
+    if key > 0: # exit on ESC
+        break
 
 formatData(playerTrackingData,ballTrackingData)   
 cap.release()
