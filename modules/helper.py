@@ -84,9 +84,6 @@ def pipeline(inputPath,outputPath):
             )
         if (cv2.waitKey(1) & 0xFF) == ord("q"):
                 break
-        key = cv2.waitKey(20)
-        if key > 0: # exit on ESC
-            break  
     cap.release()
     cv2.destroyAllWindows()
     return playerTrackingData,ballTrackingData
