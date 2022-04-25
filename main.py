@@ -23,7 +23,7 @@ perspective_transform = Perspective_Transform()
 
 bg_ratio = int(np.ceil(w/(3*115)))
 gt_img = cv2.imread('./static/world_cup_template.png')
-print((115*bg_ratio, 74*bg_ratio))
+print("FRAME SIZE: ",(115*bg_ratio, 74*bg_ratio))
 gt_img = cv2.resize(gt_img,(115*bg_ratio, 74*bg_ratio))
 gt_h, gt_w, _ = gt_img.shape
 
@@ -65,7 +65,6 @@ while(cap.isOpened()):
                         cv2.circle(bg_img, coords, 5, color, -1)
                     except:
                       pass
-                    print(color,coords)
                 
                 elif obj['label']  =='ball':
                     coords = transform_matrix(M, (x_center, y_center), (h, w), (gt_h, gt_w))

@@ -6,7 +6,6 @@ def getPlayerCoordinates(outputs,M,template,frame_size,template_size,frame_count
     for obj in outputs:
         xyxy = [obj[0], obj[1], obj[2], obj[3]]
         id = obj[4]
-        #print(color,id,frame_count)
         x_center = (xyxy[0] + xyxy[2])/2 
         y_center = xyxy[3]
         coords = transform_matrix(M, (x_center, y_center),frame_size,template_size)
