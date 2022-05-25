@@ -112,11 +112,80 @@ def findPlayerTeam(playerTrackingData):
     km = KMeans(n_clusters=2).fit(data)
     return km.labels_
 
+def Insert_row(row_number, df, row_value):
+    start_upper = 0
+    end_upper = row_number
+    start_lower = row_number
+    end_lower = df.shape[0]
+    upper_half = [*range(start_upper, end_upper, 1)]
+    lower_half = [*range(start_lower, end_lower, 1)]
+    lower_half = [x.__add__(1) for x in lower_half]
+    index_ = upper_half + lower_half
+    df.index = index_
+    df.loc[row_number] = row_value
+    df = df.sort_index()
+    return df
+
+def ballFormat(data):
+    data[['x','y']] = data['(x,y)'].str.split(',',expand=True)
+    data['x'] = data['x'].str.replace('[','')
+    data['y'] = data['y'].str.replace(']','')
+    j=0
+    data1 = data
+    while j<(len(data)):
+        j+=1
+        for i in range(0,len(data1)):
+            if i!=data1['Frame'][i]:
+                df2 = {'Frame':i}
+                data1 = Insert_row(i, data1, df2)
+    data1.drop(labels=['Unnamed: 0','(x,y)'], axis=1, inplace=True)    
+    return data1
+
+def createsubListBall(inpt):
+    rv = []
+    curr = [inpt[0]]
+    for x in inpt[1:]:
+        if x - 1 != curr[-1]:
+            rv.append(curr)
+            curr = [x]
+        else:
+            curr.append(x)
+    rv.append(curr)
+    return rv
+
+def insertBallValues(balldf):
+    indices = balldf[balldf['x'].isnull()].index.tolist()
+    subLists = createsubListBall(indices)
+    valuesX = []
+    valuesY = []
+    for sl in subLists:
+        vslX,vslY = [],[]
+        initialI = sl[0]-1
+        finalI = sl[-1]+1
+        Xin = int((float(balldf['x'].iloc[finalI]) - float(balldf['x'].iloc[initialI]))/len(sl))
+        Yin = int((float(balldf['y'].iloc[finalI]) - float(balldf['y'].iloc[initialI]))/len(sl))
+        vslX.append(int(balldf['x'].iloc[initialI])+Xin)
+        vslY.append(int(balldf['y'].iloc[initialI])+Yin)
+        for index in sl[:-1]:
+            vslX.append(int(vslX[-1])+Xin)
+            vslY.append(int(vslY[-1])+Yin)
+        valuesX.append(vslX)
+        valuesY.append(vslY)
+    
+    for i in range(len(subLists)):
+        for j in range(len(subLists[i])):
+            balldf['x'].iloc[subLists[i][j]] = valuesX[i][j]
+            balldf['y'].iloc[subLists[i][j]] = valuesY[i][j]
+    return balldf
+
+
 def formatData(playerTrackingData,ballTrackingData):
     playerdf = pd.DataFrame(playerTrackingData,columns=["Frame","(x,y)","Player ID","Team"])
     teams = findPlayerTeam(playerTrackingData)
     playerdf['Teams'] = teams
     balldf = pd.DataFrame(ballTrackingData,columns=["Frame","(x,y)"])
+    balldf = ballFormat(balldf)
+    balldf = insertBallValues(balldf)
     playerdf.to_csv('./static/PlayerTrackingData.csv')
     balldf.to_csv('./static/BallTrackingData.csv')
 
